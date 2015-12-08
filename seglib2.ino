@@ -1,4 +1,4 @@
-//#include <TimerOne.h>
+
 #include <Wire.h>
 #include "RTClib.h"
 #include "SevSeg.h"
@@ -8,7 +8,6 @@ RTC_DS1307 RTC;
 
 SevSeg sevseg; //Instantiate a seven segment object
 
-SevSeg sevseg2;
 
 /*
  * Top Row:    1 A F 2 3 B
@@ -50,40 +49,18 @@ void setup() {
 
   } else {
     Serial.println("RTC is  running!");
-  //  RTC.adjust(DateTime(2015, 12, 6, 0, 28, 30));
+    //  RTC.adjust(DateTime(2015, 12, 6, 0, 28, 30));
   }
- //  RTC.adjust(DateTime(2015, 12, 6, 0, 34, 30));
+  //  RTC.adjust(DateTime(2015, 12, 6, 0, 34, 30));
   //  RTC.adjust(DateTime(2015, 12, 5, 17, 4, 2));
-
-
-  //Timer1.initialize(1000000);
-  //Timer1.attachInterrupt(next); // blinkLED to run every 0.15 seconds
-
-
-
 }
 
-int n = 0;
+
 void loop() {
-
-
   DateTime now = RTC.now();
   float t = now.hour() + now.minute() / 100.0;
   Serial.println(t);
-  sevseg.setNumber(t, 2); // Displays '3.141'
+  sevseg.setNumber(t, 2); 
   sevseg.refreshDisplay();
-
-  //DateTime now = RTC.now();
-  /// Serial.print(now.year(), DEC);
 }
-
-void next() {
-  n++;
-  //  DateTime now = RTC.now();
-
-
-
-
-}
-
 
