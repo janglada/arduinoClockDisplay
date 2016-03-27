@@ -1,4 +1,5 @@
 
+
 #include <Wire.h>
 #include "RTClib.h"
 #include "SevSeg.h"
@@ -7,6 +8,7 @@ RTC_DS1307 RTC;
 
 
 SevSeg sevseg; //Instantiate a seven segment object
+
 
 
 /*
@@ -36,6 +38,10 @@ void setup() {
   byte digitPins[] = {d1, d2, d3, d4};
   byte segmentPins[] = {a, b, c, d, e, f, g, dot};
   sevseg.begin(COMMON_ANODE, numDigits, digitPins, segmentPins);
+
+
+  
+  
   //sevseg.setBrightness(10);
 
   Serial.begin(9600);
@@ -49,7 +55,7 @@ void setup() {
 
   } else {
     Serial.println("RTC is  running!");
-    //  RTC.adjust(DateTime(2015, 12, 6, 0, 28, 30));
+    //RTC.adjust(DateTime(2016, 1,24, 12, 44, 00));
   }
   //  RTC.adjust(DateTime(2015, 12, 6, 0, 34, 30));
   //  RTC.adjust(DateTime(2015, 12, 5, 17, 4, 2));
@@ -58,9 +64,32 @@ void setup() {
 
 void loop() {
   DateTime now = RTC.now();
-  float t = now.hour() + now.minute() / 100.0;
+  int hour =  now.hour();
+
+  if (isDst(now.day(), now.month(), now.dayOfTheWeek())) {
+    hour =  hour +1;
+  }
+  
+  float t = hour + now.minute() / 100.0;
   Serial.println(t);
   sevseg.setNumber(t, 2); 
   sevseg.refreshDisplay();
 }
+
+// http://stackoverflow.com/questions/5590429/calculating-daylight-saving-time-from-only-date
+bool isDst(int day, int month, int dow)
+{
+    if (month < 3 || month > 10)  return false; 
+    if (month > 3 && month < 10)  return true; 
+
+    int previousSunday = day - dow;
+
+    if (month == 3) return previousSunday >= 25;
+    if (month == 10) return previousSunday < 25;
+
+    return false; // this line never gonna happend
+}
+ 
+
+
 
